@@ -16,8 +16,7 @@ install:
   - echo extension=php_fileinfo.dll >> php.ini
   - cd C:\projects\winbox-args
   - php -r "readfile('https://getcomposer.org/installer');" | php
-  - php composer.phar require phpunit/phpunit:4.* squizlabs/php_codesniffer:2.* --prefer-dist --dev --no-interaction
+  - php composer.phar require phpunit/phpunit:4.* --prefer-dist --dev --no-interaction
 test_script:
   - cd C:\projects\winbox-args
   - vendor\bin\phpunit.bat
-  - vendor\bin\phpcs.bat
