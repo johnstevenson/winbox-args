@@ -19,11 +19,8 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
      */
     public function testEscapeArgument($arg, $win, $unix, $meta)
     {
-        if (defined('PHP_BINARY')) {
-            $this->assertSame($win, Winbox::escapeArgument($arg, $meta));
-        } else {
-            $this->assertSame($unix, Winbox::escapeArgument($arg, $meta));
-        }
+        $expected = defined('PHP_WINDOWS_VERSION_BUILD') ? $win : $unix;
+        $this->assertSame($expected, Winbox::escapeArgument($arg, $meta));
     }
 
     public function testCommandLine()
