@@ -37,7 +37,7 @@ class Args
         }
 
         // Quote the value if it contains whitespace or double-quotes
-        if (preg_match('/[\s"]/', $arg)) {
+        if (strpbrk($arg, " \t\"") !== false) {
 
             // Double-quote: 2n preceeding + 1 backslashes
             $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg);
@@ -48,6 +48,7 @@ class Args
             // Skip meta escaping if no double-quotes or percents
             $meta = $meta && strpbrk($arg, '"%') !== false;
             $arg = '"'.$arg.'"';
+
         }
 
         if ($meta) {
