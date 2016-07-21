@@ -15,7 +15,7 @@ class Args
     /**
      * Escapes a string to be used as a shell argument
      *
-     * Provides a more robust method than the native escapeshellarg.
+     * Provides a more robust method on Windows than escapeshellarg.
      *
      * Feel free to copy this function, but please include this notice.
      * MIT Licensed (c) John Stevenson <john-stevenson@blueyonder.co.uk>
@@ -45,10 +45,9 @@ class Args
             // Trailing backslash: 2n backslashes
             $arg = preg_replace('/(\\\\*)$/', '$1$1', $arg);
 
-            // Skip meta escaping if no double-quotes or percents
+            // Only escape meta if there are double-quotes or percents
             $meta = $meta && strpbrk($arg, '"%') !== false;
             $arg = '"'.$arg.'"';
-
         }
 
         if ($meta) {

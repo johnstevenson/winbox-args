@@ -15,6 +15,8 @@ use Winbox\Args as Winbox;
 class ArgsTest extends \PHPUnit_Framework_TestCase
 {
     /**
+     * Test various arguments are escaped as expected
+     *
      * @dataProvider dataArguments
      */
     public function testEscapeArgument($arg, $win, $unix, $meta)
@@ -23,6 +25,10 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($expected, Winbox::escapeArgument($arg, $meta));
     }
 
+    /**
+     * Test various arguments are received as expected
+     *
+     */
     public function testCommandLine()
     {
         if (!defined('PHP_BINARY')) {
@@ -47,19 +53,19 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
     {
         // argument, win-expected, unix-expected, meta
         return array(
-            'empty' => array('', '""', "''", 0),
-            'nspace' => array('abc', 'abc', "'abc'", 0),
-            'spaced' => array('a b c', '"a b c"', "'a b c'", 0),
-            'nspace-dq' => array('a"bc', '"a\"bc"', "'a\"bc'", 0),
-            'spaced dq' => array('a "b" c', '"a \"b\" c"', "'a \"b\" c'", 0),
-            'bslash' => array('ab\c\\', 'ab\c\\', "'ab\\c\\'", 0),
-            'bslash dq' => array('a\\\\"bc', '"a\\\\\\\\\"bc"', "'a\\\\\"bc'", 0),
-            'bslash end' => array('a b c\\\\', '"a b c\\\\\\\\"', "'a b c\\\\'", 0),
-            'nspace-pc' => array('%path%', '^%path^%', "'%path%'", 1),
-            'spaced pc' => array('ab %path%c', '^"ab ^%path^%c^"', "'ab %path%c'", 1),
-            'nspace-meta' => array('<>&|()^', '^<^>^&^|^(^)^^', "'<>&|()^'", 1),
-            'spaced meta' => array('<> &| ()^', '"<> &| ()^"', "'<> &| ()^'", 1),
-            'meta dq' => array('<>"&|()^', '^"^<^>\^"^&^|^(^)^^^"', "'<>\"&|()^'", 1),
+            'empty'         => array('', '""', "''", 0),
+            'nospace'       => array('abc', 'abc', "'abc'", 0),
+            'spaced'        => array('a b c', '"a b c"', "'a b c'", 0),
+            'nospace-dq'    => array('a"bc', '"a\"bc"', "'a\"bc'", 0),
+            'spaced dq'     => array('a "b" c', '"a \"b\" c"', "'a \"b\" c'", 0),
+            'bslash'        => array('ab\c\\', 'ab\c\\', "'ab\\c\\'", 0),
+            'bslash dq'     => array('a\\\\"bc', '"a\\\\\\\\\"bc"', "'a\\\\\"bc'", 0),
+            'bslash end'    => array('a b c\\\\', '"a b c\\\\\\\\"', "'a b c\\\\'", 0),
+            'nospace-pc'    => array('%path%', '^%path^%', "'%path%'", 1),
+            'spaced pc'     => array('ab %path%c', '^"ab ^%path^%c^"', "'ab %path%c'", 1),
+            'nospace-meta'  => array('<>&|()^', '^<^>^&^|^(^)^^', "'<>&|()^'", 1),
+            'spaced meta'   => array('<> &| ()^', '"<> &| ()^"', "'<> &| ()^'", 1),
+            'meta dq'       => array('<>"&|()^', '^"^<^>\^"^&^|^(^)^^^"', "'<>\"&|()^'", 1),
         );
     }
 }
