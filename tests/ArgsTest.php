@@ -10,7 +10,7 @@
 
 namespace Winbox\Tests;
 
-use Winbox\Args as Winbox;
+use Winbox\Args;
 
 class ArgsTest extends \PHPUnit_Framework_TestCase
 {
@@ -22,7 +22,7 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
     public function testEscapeArgument($arg, $win, $unix, $meta)
     {
         $expected = defined('PHP_WINDOWS_VERSION_BUILD') ? $win : $unix;
-        $this->assertSame($expected, Winbox::escapeArgument($arg, $meta));
+        $this->assertSame($expected, Args::escape($arg, $meta));
     }
 
     /**
@@ -36,36 +36,79 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
         }
 
         $params = array(PHP_BINARY, __DIR__.DIRECTORY_SEPARATOR.'args.php');
+        $expected = array();
 
         foreach ($this->dataArguments() as $test) {
             $expected[] = $test[0];
         }
 
         $params = array_merge($params, $expected);
-        $callback = array('\Winbox\Args', 'escapeArgument');
+        $callback = array('\Winbox\Args', 'escape');
 
         $command = implode(' ', array_map($callback, $params));
         exec($command, $lines);
-        $this->assertEquals($lines, $expected);
+        $this->assertEquals($expected, $lines);
     }
 
+    /**
+     * Test data provider.
+     *
+     * Each named test is an array of:     *
+     *   argument, win-expected, unix-expected, meta     *
+     */
     public function dataArguments()
     {
-        // argument, win-expected, unix-expected, meta
         return array(
+            // empty argument - must be quoted
             'empty'         => array('', '""', "''", 0),
-            'nospace'       => array('abc', 'abc', "'abc'", 0),
-            'spaced'        => array('a b c', '"a b c"', "'a b c'", 0),
-            'nospace-dq'    => array('a"bc', '"a\"bc"', "'a\"bc'", 0),
-            'spaced dq'     => array('a "b" c', '"a \"b\" c"', "'a \"b\" c'", 0),
-            'bslash'        => array('ab\c\\', 'ab\c\\', "'ab\\c\\'", 0),
-            'bslash dq'     => array('a\\\\"bc', '"a\\\\\\\\\"bc"', "'a\\\\\"bc'", 0),
-            'bslash end'    => array('a b c\\\\', '"a b c\\\\\\\\"', "'a b c\\\\'", 0),
-            'nospace-pc'    => array('%path%', '^%path^%', "'%path%'", 1),
-            'spaced pc'     => array('ab %path%c', '^"ab ^%path^%c^"', "'ab %path%c'", 1),
-            'nospace-meta'  => array('<>&|()^', '^<^>^&^|^(^)^^', "'<>&|()^'", 1),
-            'spaced meta'   => array('<> &| ()^', '"<> &| ()^"', "'<> &| ()^'", 1),
-            'meta dq'       => array('<>"&|()^', '^"^<^>\^"^&^|^(^)^^^"', "'<>\"&|()^'", 1),
+
+            // whitespace <space> must be quoted
+            'ws space'      => array('a b c', '"a b c"', "'a b c'", 0),
+
+            // whitespace <tab> must be quoted
+            'ws tab'        => array("a\tb\tc", "\"a\tb\tc\"", "'a\tb\tc'", 0),
+
+            // no whitespace must not be quoted
+            'no-ws'         => array('abc', 'abc', "'abc'", 0),
+
+            // double-quotes must be backslash-escaped
+            'dq'            => array('a"bc', 'a\"bc', "'a\"bc'", 0),
+
+            // double-quotes must be backslash-escaped with preceeding backslashes doubled
+            'dq-bslash'     => array('a\\"bc', 'a\\\\\"bc', "'a\\\"bc'", 0),
+
+            // backslashes not preceeding a double-quote are treated as literal
+            'bslash'        => array('ab\\\\c\\', 'ab\\\\c\\', "'ab\\\\c\\'", 0),
+
+            // trailing backslashes must be doubled up when the argument is quoted
+            'bslash dq'     => array('a b c\\\\', '"a b c\\\\\\\\"', "'a b c\\\\'", 0),
+
+            // meta: double-quotes must be caret-escaped
+            'meta-dq'       => array('a"bc', 'a\^"bc', "'a\"bc'", 1),
+
+            // meta: outer double-quotes must be caret-escaped as well
+            'meta dq'       => array('a "b" c', '^"a \^"b\^" c^"', "'a \"b\" c'", 1),
+
+            // meta: percent expansion must be caret-escaped
+            'meta-pc'       => array('%path%', '^%path^%', "'%path%'", 1),
+
+            // meta: expansion must have two percent characters
+            'meta-ex1'      => array('%path', '%path', "'%path'", 1),
+
+            // meta: expansion must have have two surrounding percent characters
+            'meta-ex2'      => array('%%path', '%%path', "'%%path'", 1),
+
+            // meta: expansion must ignore exclamation marks
+            'meta-ex3'      => array('!path!', '!path!', "'!path!'", 1),
+
+            // meta: caret-escaping must escape all other meta chars (triggered by double-quote)
+            'meta-all-dq'   => array('<>"&|()^', '^<^>\^"^&^|^(^)^^', "'<>\"&|()^'", 1),
+
+            // other meta: no caret-escaping when whitespace in argument
+            'other meta'    => array('<> &| ()^', '"<> &| ()^"', "'<> &| ()^'", 1),
+
+            // other meta: quote escape chars when no whitespace in argument
+            'other-meta'    => array('<>&|()^', '"<>&|()^"', "'<>&|()^'", 1),
         );
     }
 }

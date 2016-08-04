@@ -17,41 +17,39 @@ class Args
      *
      * Provides a more robust method on Windows than escapeshellarg.
      *
-     * Feel free to copy this function, but please include this notice.
+     * Feel free to copy this function, but please keep the following notice:
      * MIT Licensed (c) John Stevenson <john-stevenson@blueyonder.co.uk>
      * See https://github.com/johnstevenson/winbox-args for more information.
-     *      *
+     *
      * @param string $arg The argument to be escaped
      * @param bool $meta Additionally escape cmd.exe meta characters
      *
      * @return string The escaped argument
      */
-    public static function escapeArgument($arg, $meta = true)
+    public static function escape($arg, $meta = true)
     {
         if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
             return escapeshellarg($arg);
         }
 
-        if ('' === $arg) {
-            return '""';
+        $quote = strpbrk($arg, " \t") !== false || $arg === '';
+        $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg, -1, $dquotes);
+
+        if ($meta) {
+            $meta = $dquotes || preg_match('/%[^%]+%/', $arg);
+
+            if (!$meta && !$quote) {
+                $quote = strpbrk($arg, '^&|<>()') !== false;
+            }
         }
 
-        // Quote the value if it contains whitespace or double-quotes
-        if (strpbrk($arg, " \t\"") !== false) {
-
-            // Double-quote: 2n preceeding + 1 backslashes
-            $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg);
-
-            // Trailing backslash: 2n backslashes
+        if ($quote) {
             $arg = preg_replace('/(\\\\*)$/', '$1$1', $arg);
-
-            // Only escape meta if there are double-quotes or percents
-            $meta = $meta && strpbrk($arg, '"%') !== false;
             $arg = '"'.$arg.'"';
         }
 
         if ($meta) {
-            $arg = preg_replace('/([<>&|()%"^])/', '^$1', $arg);
+            $arg = preg_replace('/(["^&|<>()%])/', '^$1', $arg);
         }
 
         return $arg;
