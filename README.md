@@ -16,8 +16,8 @@ Alternatively, you can just [copy the code][function] into your own project (but
 The following transformations are made:
 
 * Double-quotes are escaped with a backslash, with any preceeding backslashes doubled up.
-* Trailing backslashes are doubled up.
 * The argument is only enclosed in double-quotes if it contains whitespace or is empty.
+* Trailing backslashes are doubled up if the argument is enclosed in double-quotes.
 
 See [How Windows parses the command-line](https://github.com/johnstevenson/winbox-args/wiki/How-Windows-parses-the-command-line) if you would like to know why.
 
