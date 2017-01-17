@@ -53,8 +53,8 @@ class ArgsTest extends \PHPUnit_Framework_TestCase
     /**
      * Test data provider.
      *
-     * Each named test is an array of:     *
-     *   argument, win-expected, unix-expected, meta     *
+     * Each named test is an array of:
+     *   argument, win-expected, unix-expected, meta
      */
     public function dataArguments()
     {
