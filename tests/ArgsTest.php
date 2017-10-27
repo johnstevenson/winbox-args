@@ -25,6 +25,16 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, Args::escape($arg, $meta));
     }
 
+    public function testEscapeModule()
+    {
+        $arg = 'path\\with space\\and\\%expansion%';
+        $expected = '^"path\\with space\\and\\^%expansion^%^"';
+        $this->assertSame($expected, Args::escape($arg, true));
+
+        $expected = '"path\\with space\\and\\%expansion%"';
+        $this->assertSame($expected, Args::escape($arg, true, true));
+    }
+
     /**
      * Test various arguments are received as expected
      *
@@ -43,9 +53,8 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
         }
 
         $params = array_merge($params, $expected);
-        $callback = array('\Winbox\Args', 'escape');
+        $command = Args::escapeCommand($params);
 
-        $command = implode(' ', array_map($callback, $params));
         exec($command, $lines);
         $this->assertEquals($expected, $lines);
     }
