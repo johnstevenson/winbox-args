@@ -11,3 +11,7 @@
 error_reporting(E_ALL);
 $autoloader = require dirname(__DIR__).'/vendor/autoload.php';
 $autoloader->addPsr4('Winbox\\Tests\\', __DIR__);
+
+if (!class_exists('\PHPUnit\Framework\TestCase') && class_exists('\PHPUnit_Framework_TestCase')) {
+    class_alias('\PHPUnit_Framework_TestCase', '\PHPUnit\Framework\TestCase');
+}

@@ -30,4 +30,4 @@ install:
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - vendor\bin\phpunit.bat
+  - vendor\bin\phpunit
