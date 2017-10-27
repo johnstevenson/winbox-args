@@ -3,7 +3,8 @@ shallow_clone: false
 platform: 'x86'
 clone_folder: C:\projects\winbox-args
 init:
-  - cinst -y php -i
+  - ps: Set-Service wuauserv -StartupType Manual
+  - cinst -y php
   - SET PATH=C:\tools\php\;%PATH%
 install:
   - cd c:\tools\php
