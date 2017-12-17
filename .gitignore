@@ -1,6 +1,4 @@
+composer.lock
+phpcs.xml
+phpunit.xml
 vendor/
-*.lock
-*phpunit.xml
-!phpunit.xml.dist
-*phpcs.xml
-!phpcs.xml.dist
