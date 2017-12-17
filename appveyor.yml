@@ -27,4 +27,4 @@ install:
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - vendor\bin\phpunit
+  - vendor\bin\phpunit -c phpunit.xml.dist --colors=always

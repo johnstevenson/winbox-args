@@ -12,7 +12,7 @@ namespace Winbox\Tests;
 
 use Winbox\Args;
 
-class ArgsTest extends \PHPUnit_Framework_TestCase
+class ArgsTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * Test various arguments are escaped as expected
