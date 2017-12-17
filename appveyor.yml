@@ -23,8 +23,8 @@ install:
   - IF %PHP%==1 (composer self-update) ELSE (composer --version)
   - cd %APPVEYOR_BUILD_FOLDER%
   - composer install --prefer-dist --no-progress
-  - composer require phpunit/phpunit:4.* --prefer-dist --no-progress
+  - composer require phpunit/phpunit:6.* --prefer-dist --no-progress
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
-  - vendor\bin\phpunit -c phpunit.xml.dist --colors=always
+  - vendor\bin\phpunit --colors=always
