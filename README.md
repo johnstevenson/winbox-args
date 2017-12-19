@@ -26,10 +26,11 @@ By default, _cmd.exe_ meta characters are also escaped:
 * by caret-escaping the transformed argument (if it contains internal double-quotes or `%...%` syntax).
 * or by enclosing the argument in double-quotes.
 
-There are a couple limitations:
+There are some limitations:
 
 1. If _cmd_ is started with _DelayedExpansion_ enabled, `!...!` syntax could expand environment variables.
 2. If the program name requires caret-escaping and contains whitespace, _cmd_ will not recognize it.
+3. If an argument contain a newline `\n` character
 
 See [How cmd.exe parses a command](https://github.com/johnstevenson/winbox-args/wiki/How-cmd.exe-parses-a-command) and [Implementing a solution](https://github.com/johnstevenson/winbox-args/wiki/Implementing-a-solution) for more information.
 
