@@ -1,7 +1,5 @@
 build: false
 shallow_clone: true
-platform:
-  - x64
 
 environment:
   PHP_CHOCO_VERSION: 7.2.0
