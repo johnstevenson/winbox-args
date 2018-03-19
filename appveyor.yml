@@ -17,7 +17,7 @@ init:
 
 install:
   - IF EXIST %PHP_CACHE_DIR% (SET PHP=1)
-  - IF %PHP%==0 cinst php -yi --version %PHP_CHOCO_VERSION%  --params "/InstallDir:%PHP_CACHE_DIR%"
+  - IF %PHP%==0 cinst php -i -y --version %PHP_CHOCO_VERSION%  --params "/InstallDir:%PHP_CACHE_DIR%"
   - IF %PHP%==0 cinst composer -y --ia "/DEV=%PHP_CACHE_DIR%"
   - php -v
   - IF %PHP%==0 (composer --version) ELSE (composer self-update)
