@@ -25,13 +25,16 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
         $this->assertSame($expected, Args::escape($arg, $meta));
     }
 
+    /**
+     * Test that there are no carets in module name
+     *
+     */
     public function testEscapeModule()
     {
         $arg = 'path\\with space\\and\\%expansion%';
-        $expected = '^"path\\with space\\and\\^%expansion^%^"';
-        $this->assertSame($expected, Args::escape($arg, true));
+        $quote = defined('PHP_WINDOWS_VERSION_BUILD') ? '"' : "'";
 
-        $expected = '"path\\with space\\and\\%expansion%"';
+        $expected = $quote.$arg.$quote;
         $this->assertSame($expected, Args::escape($arg, true, true));
     }
 
