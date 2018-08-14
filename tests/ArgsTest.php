@@ -75,7 +75,7 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
             'empty'         => array('', '""', "''", 0),
 
             // unix single-quote must be escaped
-            'unix-sq'       => array("a'bc", "a'bc", "'a'\\''b'", 0),
+            'unix-sq'       => array("a'bc", "a'bc", "'a'\\''bc'", 0),
 
             // whitespace <space> must be quoted
             'ws space'      => array('a b c', '"a b c"', "'a b c'", 0),
