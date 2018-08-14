@@ -4,7 +4,7 @@ Winbox-Args
 [![Build Status](https://travis-ci.org/johnstevenson/winbox-args.svg?branch=master)](https://travis-ci.org/johnstevenson/winbox-args)
 [![Build status](https://ci.appveyor.com/api/projects/status/p4k75qqcyioj0mfl?svg=true)](https://ci.appveyor.com/project/johnstevenson/winbox-args)
 
-A PHP function to escape command-line arguments, which on Windows replaces `escapeshellarg` with a more robust method. Install from [Packagist][packagist] and use it like this:
+A PHP function to escape command-line arguments, which replaces `escapeshellarg` with more robust methods for both Windows and non-Windows platforms. Install from [Packagist][packagist] and use it like this:
 
 ```php
 $escaped = Winbox\Args::escape($argument);
@@ -12,7 +12,7 @@ $escaped = Winbox\Args::escape($argument);
 
 Alternatively, you can just [copy the code][function] into your own project (but please keep the license attribution and documentation link).
 
-### What it does
+### What it does on the Windows platform
 The following transformations are made:
 
 * Double-quotes are escaped with a backslash, with any preceeding backslashes doubled up.
@@ -33,6 +33,9 @@ There are some limitations:
 3. If an argument contain a newline `\n` character, this will not be escaped.
 
 See [How cmd.exe parses a command](https://github.com/johnstevenson/winbox-args/wiki/How-cmd.exe-parses-a-command) and [Implementing a solution](https://github.com/johnstevenson/winbox-args/wiki/Implementing-a-solution) for more information.
+
+### What it does on non-Windows platforms
+The argument is enclosed is single-quotes, with internal single-quotes escaped.
 
 ### Is that it?
 Yup. An entire repo for a tiny function. However, it needs quite a lot of explanation because:
