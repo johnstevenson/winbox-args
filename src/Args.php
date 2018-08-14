@@ -34,7 +34,8 @@ class Args
     public static function escape($arg, $meta = true, $module = false)
     {
         if (!defined('PHP_WINDOWS_VERSION_BUILD')) {
-            return escapeshellarg($arg);
+            // Escape single-quotes and enclose in single-quotes
+            return "'".str_replace("'", "'\\''", $arg)."'";
         }
 
         // Check for whitespace or an empty value
@@ -48,7 +49,7 @@ class Args
             $meta = $dquotes || preg_match('/%[^%]+%/', $arg);
 
             if (!$meta) {
-                // Check for characters that can be escaped in quotes
+                // Check for characters that can be escaped in double-quotes
                 $quote = $quote || strpbrk($arg, '^&|<>()') !== false;
 
             } elseif ($module && !$dquotes && $quote) {
@@ -60,8 +61,7 @@ class Args
 
         if ($quote) {
             // Double-up trailing backslashes and enclose in double-quotes
-            $arg = preg_replace('/(\\\\*)$/', '$1$1', $arg);
-            $arg = '"'.$arg.'"';
+            $arg = '"'.preg_replace('/(\\\\*)$/', '$1$1', $arg).'"';
         }
 
         if ($meta) {
