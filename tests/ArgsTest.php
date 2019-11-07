@@ -49,13 +49,22 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
         }
 
         $params = array(PHP_BINARY, __DIR__.DIRECTORY_SEPARATOR.'args.php');
+        $args = array();
         $expected = array();
 
         foreach ($this->dataArguments() as $test) {
-            $expected[] = $test[0];
+            $arg = $test[0];
+
+            if ($arg === null || $arg === false) {
+                $expected[] = '';
+            } else {
+                $expected[] = $arg;
+            }
+
+            $args[] = $arg;
         }
 
-        $params = array_merge($params, $expected);
+        $params = array_merge($params, $args);
         $command = Args::escapeCommand($params);
 
         exec($command, $lines);
@@ -73,6 +82,12 @@ class ArgsTest extends \PHPUnit\Framework\TestCase
         return array(
             // empty argument - must be quoted
             'empty'         => array('', '""', "''", 0),
+
+            // false argument - must be quoted
+            'empty false'   => array(false, '""', "''", 0),
+
+            // null argument - must be quoted
+            'empty null'    => array(null, '""', "''", 0),
 
             // unix single-quote must be escaped
             'unix-sq'       => array("a'bc", "a'bc", "'a'\\''bc'", 0),

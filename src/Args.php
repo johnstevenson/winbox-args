@@ -39,7 +39,7 @@ class Args
         }
 
         // Check for whitespace or an empty value
-        $quote = strpbrk($arg, " \t") !== false || $arg === '';
+        $quote = strpbrk($arg, " \t") !== false || (string) $arg === '';
 
         // Escape double-quotes and double-up preceding backslashes
         $arg = preg_replace('/(\\\\*)"/', '$1$1\\"', $arg, -1, $dquotes);
