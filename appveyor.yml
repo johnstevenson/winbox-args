@@ -3,7 +3,7 @@ clone_depth: 5
 
 environment:
   # This sets the PHP version (from Chocolatey)
-  PHPCI_CHOCO_VERSION: 7.2.9
+  PHPCI_CHOCO_VERSION: 7.3.11
   PHPCI_CACHE: C:\tools\phpci
   PHPCI_PHP: C:\tools\phpci\php
   PHPCI_COMPOSER: C:\tools\phpci\composer
@@ -26,7 +26,7 @@ install:
   - php -v
   - IF %PHP%==0 (composer --version) ELSE (composer self-update)
   - cd %APPVEYOR_BUILD_FOLDER%
-  - composer install --prefer-dist --no-progress
+  - composer install --ansi --prefer-dist --optimize-autoloader --no-suggest --no-progress
 
 test_script:
   - cd %APPVEYOR_BUILD_FOLDER%
